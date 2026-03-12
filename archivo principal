@@ -1,0 +1,11 @@
+from flask import Flask
+from app.database import db
+from app.routes import api
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://usuario:password@localhost/proyecto_api'
+db.init_app(app)
+app.register_blueprint(api, url_prefix='/api')
+
+if __name__ == '__main__':
+    app.run(debug=True)
