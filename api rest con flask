@@ -1,0 +1,18 @@
+from flask import Blueprint, request, jsonify
+from .models import Usuario, Post
+from .database import db
+
+api = Blueprint('api', __name__)
+
+@api.route('/usuarios', methods=['GET'])
+def get_usuarios():
+    usuarios = Usuario.query.all()
+    return jsonify([{"id": u.id, "nombre": u.nombre, "correo": u.correo} for u in usuarios])
+
+@api.route('/posts', methods=['POST'])
+def create_post():
+    data = request.json
+    nuevo_post = Post(titulo=data['titulo'], contenido=data['contenido'], usuario_id=data['usuario_id'])
+    db.session.add(nuevo_post)
+    db.session.commit()
+    return jsonify({"message": "Post creado"}), 201
